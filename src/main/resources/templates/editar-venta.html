@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Editar Venta</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+</head>
+<body class="hold-transition">
+<div class="container-fluid p-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">Actualizar Venta</h3>
+                </div>
+
+                <div class="user-panel mt-1 pb-1 mb-1 d-flex" th:if="${session.usuario != null}">
+                    <div class="info">
+                        <a href="#" class="d-block">
+                            <i class="fas fa-user mr-2"></i>
+                            <span th:text="${session.usuario.nombre}">Usuario</span>
+                        </a>
+                    </div>
+                </div>
+
+                <form th:action="@{/ventas/actualizar}" th:object="${venta}" method="post">
+                    <input type="hidden" th:field="*{idVenta}">
+
+                    <div class="card-body pt-2">
+
+                        <div class="form-group">
+                            <label for="idCliente">Cliente:</label>
+                            <select th:field="*{idCliente}" class="form-control" id="idCliente" required>
+                                <option value="">-- Selecciona un cliente --</option>
+                                <option th:each="c : ${clientes}"
+                                        th:value="${c.idCliente}"
+                                        th:selected="${c.idCliente == venta.idCliente}"
+                                        th:text="${c.nombreCliente}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="idServicio">Servicio:</label>
+                            <select th:field="*{idServicio}" class="form-control" id="idServicio" required>
+                                <option value="">-- Selecciona un servicio --</option>
+                                <option th:each="s : ${servicios}"
+                                        th:value="${s.idServicio}"
+                                        th:selected="${s.idServicio == venta.idServicio}"
+                                        th:text="${s.nombreServicio}"
+                                        th:attr="data-precio=${s.precio}">
+                                </option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="fechaVenta">Fecha:</label>
+                            <input type="date" th:field="*{fechaVenta}" class="form-control" id="fechaVenta" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cantidad">Cantidad:</label>
+                            <input type="number" th:field="*{cantidad}" class="form-control" id="cantidad" min="1" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="total">Total:</label>
+                            <input type="number" th:field="*{total}" class="form-control" id="total" step="0.01" min="0" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="direccion">Dirección:</label>
+                            <input type="text" th:field="*{direccion}" class="form-control" id="direccion" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descripcion">Descripción:</label>
+                            <textarea th:field="*{descripcion}" class="form-control" id="descripcion" rows="2"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-primary">Actualizar</button>
+                        <a th:href="@{/ventas}" class="btn btn-default float-right">Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/plugins/jquery/jquery.min.js"></script>
+<script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="/dist/js/adminlte.min.js"></script>
+
+
+<script>
+    $('#idServicio, #cantidad').on('change', function () {
+        const precio = $('#idServicio option:selected').data('precio') || 0;
+        const cantidad = parseInt($('#cantidad').val()) || 0;
+        $('#total').val((precio * cantidad).toFixed(2));
+    });
+</script>
+
+</body>
+</html>
+</body>
+</html>
